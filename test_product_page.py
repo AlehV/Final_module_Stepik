@@ -21,16 +21,6 @@ from selenium.webdriver.support import expected_conditions as EC
 #                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer7",
 #                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
 #                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9"])
-# def test_guest_can_add_product_to_basket(browser,links):
-#     #link = "http://selenium1py.pythonanywhere.com/catalogue/the-shellcoders-handbook_209/?promo=newYear"
-#     link = f"{links}"
-#     page = PageObject(browser, link)
-#     page.open()
-#     page.click_add_to_backet_button()
-#     page.solve_quiz_and_get_code() #Решение задачи с помощью данной функции.
-#     time.sleep(10)
-#     page.should_be_message_about_adding()
-#     page.should_be_message_basket_total()
 
 # def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
 #     link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0" #Открываем страницу товара
@@ -39,15 +29,7 @@ from selenium.webdriver.support import expected_conditions as EC
 #     page.click_add_to_backet_button() #Добавляем товар в корзину
 #     page.solve_quiz_and_get_code()
 #     page.should_not_be_success_message()#    Проверяем, что нет сообщения об успехе с помощью is_not_element_present
-#
-# def test_guest_cant_see_success_message(browser):
-#     link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0"  # Открываем страницу товара
-#     page = PageObject(browser, link)
-#     page.open()
-#     #page.click_add_to_backet_button()  # Добавляем товар в корзину
-#     #page.solve_quiz_and_get_code()
-#     page.should_not_be_success_message()
-#
+
 # def test_message_disappeared_after_adding_product_to_basket(browser):
 #     link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0" #Открываем страницу товара
 #     page = PageObject(browser, link)
@@ -68,17 +50,46 @@ from selenium.webdriver.support import expected_conditions as EC
 #     page.open()
 #     page.go_to_login_page()
 
-def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
-    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"  #Гость открывает страницу товара
-    page = BasketPage(browser, link)
-    page.open()
-    page.should_open_the_basket() # Переходит в корзину по кнопке в шапке
-    page.empty_basket() # Ожидаем, что в корзине нет товаров   # Ожидаем, что есть текст о том что корзина пуста
+# def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
+#     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"  #Гость открывает страницу товара
+#     page = BasketPage(browser, link)
+#     page.open()
+#     page.should_open_the_basket() # Переходит в корзину по кнопке в шапке
+#     page.empty_basket() # Ожидаем, что в корзине нет товаров   # Ожидаем, что есть текст о том что корзина пуста
+#
+# def test_guest_cant_see_product_in_basket_opened_from_product_page_negative(browser):
+#     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"  #Гость открывает страницу товара
+#     page = BasketPage(browser, link)
+#     page.open()
+#     page.should_open_the_basket() # Переходит в корзину по кнопке в шапке
+#     page.empty_basket_negative()#НЕГАТИВНЫЙ  Ожидаем, что в корзине нет товаров   # Ожидаем, что есть текст о том что корзина пуста.
+
+@pytest.mark.registration
+class TestUserAddToBasketFromProductPage(BasePage):
+    @pytest.fixture(scope="function", autouse=True)     #добавить фикстуру сетап. внетри нее
+    def setup(self):
+        link = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"     # открыть страницу регистрации
+        page = LoginPage(browser, link)
+        page.register_new_user()     # зарегать нового польщователя
+        page.should_be_authorized_user()     # проверить ,что пользователь залогинен
 
 
-def test_guest_cant_see_product_in_basket_opened_from_product_page_negative(browser):
-    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"  #Гость открывает страницу товара
-    page = BasketPage(browser, link)
-    page.open()
-    page.should_open_the_basket() # Переходит в корзину по кнопке в шапке
-    page.empty_basket_negative()#НЕГАТИВНЫЙ  Ожидаем, что в корзине нет товаров   # Ожидаем, что есть текст о том что корзина пуста.
+    def test_user_cant_see_success_message(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0"  # Открываем страницу товара
+        page = PageObject(browser, link)
+        page.open()
+        # page.click_add_to_backet_button()  # Добавляем товар в корзину
+        # page.solve_quiz_and_get_code()
+        page.should_be_success_message()
+
+    def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer5"
+        page = PageObject(browser, link)
+        page.open()
+        page.click_add_to_backet_button()
+        page.solve_quiz_and_get_code()  # Решение задачи с помощью данной функции.
+        time.sleep(10)
+        page.should_be_message_about_adding()
+        page.should_be_message_basket_total()
+
+
