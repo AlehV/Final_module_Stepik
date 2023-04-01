@@ -1,5 +1,7 @@
 from .base_page import BasePage
 from .locators import LoginPageLocators
+from .locators import BasePageLocators
+import time
 
 class LoginPage(BasePage):
     def should_be_login_page(self):
@@ -16,20 +18,19 @@ class LoginPage(BasePage):
     def should_be_register_form(self):
         assert self.is_element_present(*LoginPageLocators.REGISTER_FORM), "Login form is not presented"
     
-    def register_new_user(email, password):      #Добавьте в LoginPage метод register_new_user(email, password),
-        email = str(time.time()) + "@fakemail.org"
-        password = "Password1)"
-        link = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"  #Гость открывает главную страницу логина
-        page = LoginPage(browser, link)
-        page.open() #Гость открывает главную страницу логина
-        email_imput = browser.find_element(By.ID, "#id_registration-email")
-        email_imput.send_keys(email)
-        password_input = browser.find_element(By.ID, "#id_registration-password1")
-        password_input.send_keys(password)
-        password_confirm_input = browser.find_element(By.ID, "#id_registration-password2")
-        password_confirm_input.send_keys(password)
-        register_button = browser.find_element(By.CSS_SELECTOR, "registration_submit")
-        register_button.click()
-        #REGISTER_BUTTON = (By.CSS_SELECTOR, "#register_form > button")
-       
+    def register_new_user(self, email, password):
+        email_field = self.browser.find_element(*BasePageLocators.EMAIL_IMPUT)
+        email_field.send_keys(email)
 
+        password_field = self.browser.find_element(*BasePageLocators.PASSWORD_INPUT)
+        password_field.send_keys(password)
+
+        password_confirm_field = self.browser.find_element(*BasePageLocators.PASSWORD_CONFIRM_INPUT)
+        password_confirm_field.send_keys(password)
+        
+        register_button = self.browser.find_element(*BasePageLocators. REGISTER_BUTTON)
+        register_button.click()
+
+
+
+        

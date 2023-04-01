@@ -1,6 +1,7 @@
 from .base_page import BasePage
 from .locators import ProductPageLocators
 import math
+import time
 
 
 class PageObject(BasePage):

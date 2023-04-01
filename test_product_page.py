@@ -3,6 +3,7 @@ from .pages.product_page import PageObject
 from .pages.base_page import BasePage
 from .pages.login_page import LoginPage
 from .pages.locators import ProductPageLocators
+from .pages.locators import BasePageLocators
 from .pages.basket_page import BasketPage
 from selenium.webdriver.common.by import By
 import pytest
@@ -65,21 +66,21 @@ from selenium.webdriver.support import expected_conditions as EC
 #     page.empty_basket_negative()#НЕГАТИВНЫЙ  Ожидаем, что в корзине нет товаров   # Ожидаем, что есть текст о том что корзина пуста.
 
 @pytest.mark.registration
-class TestUserAddToBasketFromProductPage(BasePage):
+class TestUserAddToBasketFromProductPage():
     @pytest.fixture(scope="function", autouse=True)     #добавить фикстуру сетап. внетри нее
-    def setup(self):
-        link = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"     # открыть страницу регистрации
+    def setup(self,browser):
+        link = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"  # открыть страницу регистрации
         page = LoginPage(browser, link)
-        page.register_new_user()     # зарегать нового польщователя
-        page.should_be_authorized_user()     # проверить ,что пользователь залогинен
-
-
+        page.open()
+        email = str(time.time()) + "@fakemail.org"
+        password = "Password1)"
+        page.register_new_user(email, password)  # зарегать нового польщователя
+        page.should_be_authorized_user()
+        
     def test_user_cant_see_success_message(self, browser):
         link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0"  # Открываем страницу товара
         page = PageObject(browser, link)
         page.open()
-        # page.click_add_to_backet_button()  # Добавляем товар в корзину
-        # page.solve_quiz_and_get_code()
         page.should_be_success_message()
 
     def test_user_can_add_product_to_basket(self, browser):
@@ -88,7 +89,6 @@ class TestUserAddToBasketFromProductPage(BasePage):
         page.open()
         page.click_add_to_backet_button()
         page.solve_quiz_and_get_code()  # Решение задачи с помощью данной функции.
-        time.sleep(10)
         page.should_be_message_about_adding()
         page.should_be_message_basket_total()
 

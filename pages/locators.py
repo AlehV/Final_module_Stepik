@@ -22,8 +22,7 @@ class BasePageLocators():
     EMPTY_BASKET_MESSAGE = (By.CSS_SELECTOR, "#content_inner p")
     USER_ICON = (By.CSS_SELECTOR, ".icon-user")
 
-
-
-
-
-        
+    EMAIL_IMPUT = (By.ID, "id_registration-email")
+    PASSWORD_INPUT = (By.ID, "id_registration-password1")
+    PASSWORD_CONFIRM_INPUT = (By.ID, "id_registration-password2")
+    REGISTER_BUTTON = (By.CSS_SELECTOR, "#register_form > button")
