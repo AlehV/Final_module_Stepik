@@ -36,4 +36,4 @@ class PageObject(BasePage):
 
     def should_be_success_message(self):
         assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE), \
-            "Element not dissapeared, but should "
+            "Element not dissapeared, but should be"
